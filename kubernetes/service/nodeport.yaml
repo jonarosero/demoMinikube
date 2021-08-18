@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations: 
+    kubernetes.io/change-cause: "Pokedex"
+  name: deployment-test1
+  labels:
+    app: pokedex
+spec:
+  revisionHistoryLimit: 3
+  replicas: 3
+  selector:
+    matchLabels:
+      app: pokedex
+  template:
+    metadata:
+      labels:
+        app: pokedex
+    spec:
+      containers:
+        - name: netflix
+          image: akeus/pokedex-react:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-pokedex
+  labels:
+    app: pokedex
+spec:
+  type: NodePort
+  selector:
+    app: pokedex
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 80
